@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <title>Main</title>
+    <style>
+    a:link {
+        color: black;
+        text-decoration: none;
+    }
+    a:visited {
+        color: black;
+        text-decoration: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        {% if session.get('logFlag') %}
+            <p id="main-name">Hello! 👋 {{ session['username'] }}</p>
+            <p id="main-email"> {{ session['email'] }} </p>
+            <a href="/user_info_edit/{{ session['idx'] }}" id="main-form">Edit</a>
+            <a href="/logout" id="main-form">Logout</a>
+        {% else %}
+            <meta http-equiv="refresh" content="0; url=/login"></meta>
+        {% endif %}
+        <hr>
+<!--    <h1>main Page</h1>-->
+    </div>
+</body>
+</html>
