@@ -173,7 +173,7 @@ def user_info_edit_proc():
 
     if len(idx) == 0 or len(password) == 0 or len(email) == 0:
         flash('값을 입력해주세요')
-        return redirect('user_info_edit/1')
+        return redirect('user_info_edit/<int:edit_idx>')
 
     db = db_connect()
     try:
@@ -190,7 +190,7 @@ def user_info_edit_proc():
 
             if password == original_password and email == original_email:
                 flash('변경된 정보가 없습니다.')
-                return redirect('user_info_edit/1')
+                return redirect('user_info_edit/<int:edit_idx>')
             elif password != original_password or email != original_email:
                 try:
                     sql = """
@@ -207,7 +207,7 @@ def user_info_edit_proc():
                 except Exception as e:
                     flash('업데이트 중 오류가 발생했습니다.')
                     print(str(e))
-                    return redirect('user_info_edit/1')
+                    return redirect('user_info_edit/<int:edit_idx>')
     finally:
         cursor.close()
         db.close()
@@ -221,4 +221,4 @@ def logout():
 
 if __name__ == '__main__':
     app.secret_key = '19990517'
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
