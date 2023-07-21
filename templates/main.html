@@ -22,6 +22,7 @@
             <p id="main-email"> {{ session['email'] }} </p>
             <a href="/user_info_edit/{{ session['idx'] }}" id="main-form">Edit</a>
             <a href="/logout" id="main-form">Logout</a>
+            <a href="/board" id="main-form">Board</a>
         {% else %}
             <meta http-equiv="refresh" content="0; url=/login"></meta>
         {% endif %}

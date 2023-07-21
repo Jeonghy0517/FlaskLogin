@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from email_validator import validate_email, EmailNotValidError
+from flask_pymongo import PyMongo
+import time
 import pymysql
 import os
 import json
@@ -214,6 +216,36 @@ def user_info_edit_proc():
 
     return redirect('main')
 
+app.config["MONGO_URI"] = "mongodb://localhost:27017/my_web"
+mongo = PyMongo(app)
+
+@app.route('/board', methods=['POST', 'GET'])
+def board():
+    username = session['username']
+    if 'username' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+        cur_time = time.strftime("%y%m%d %H:%M:%S")
+        contents = request.form.get('contents')
+
+        if len(contents) == 0:
+            flash('내용을 입력해주세요')
+            return redirect('/board')
+
+        db_conn = mongo.db.board
+        board_content = {
+            "pubdate": cur_time,
+            "content": contents,
+            "user": username
+        }
+        db_conn.insert_one(board_content)
+
+        board_data = list(mongo.db.board.find())
+        return render_template('board.html', board_data = board_data)
+    return render_template('board.html')
+
+
 @app.route('/logout')
 def logout():
     session.clear()
@@ -221,4 +253,4 @@ def logout():
 
 if __name__ == '__main__':
     app.secret_key = '19990517'
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
